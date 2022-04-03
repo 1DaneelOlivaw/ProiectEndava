@@ -4,29 +4,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "orders")
 @Getter
 @Setter
-public class Order {
-
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastModified;
+    @ManyToOne
+    private Product product;
 
-    @OneToOne(targetEntity = User.class)
-    @JoinColumn(name = "users_id")
-    private Integer userId;
+    private Integer quantity;
 
-    private String status;
-
-
-
-
+    @ManyToOne
+    private Cart cart;
 
 }
