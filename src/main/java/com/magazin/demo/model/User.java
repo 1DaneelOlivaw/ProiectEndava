@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @NotNull
     private String firstName;
@@ -22,7 +22,7 @@ public class User {
     @NotNull
     private String lastName;
 
-    @Type()
+    @NotNull
     private Integer phoneNumber;
 
     @NotNull

@@ -16,7 +16,7 @@ public class Product {
 
     private String name;
 
-    private String price;
+    private Float price;
 
     private Boolean stock;
 }
