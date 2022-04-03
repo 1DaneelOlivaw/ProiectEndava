@@ -34,4 +34,7 @@ public class User {
     @NotNull
     private String userType;
 
+    @OneToOne(mappedBy = "userId")
+    private Wishlist wishlist;
+
 }
