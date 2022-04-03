@@ -16,8 +16,8 @@ public class Wishlist {
     private Integer id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
-    private User userId;
+    @JoinColumn(name = "customer_id")
+    private Customer customerId;
 
     @ManyToMany
     @JoinColumn(name = "products")

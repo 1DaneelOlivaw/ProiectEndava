@@ -6,21 +6,17 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @NotNull
-    private String firstName;
-
-    @NotNull
-    private String lastName;
 
     @NotNull
     private Integer phoneNumber;
@@ -31,10 +27,14 @@ public class User {
     @NotNull
     private String password;
 
-    @NotNull
-    private String userType;
+    private String address;
 
-    @OneToOne(mappedBy = "userId")
-    private Wishlist wishlist;
-
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
 }
