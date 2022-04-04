@@ -1,13 +1,11 @@
 package com.magazin.demo.service.impl;
 
-import com.magazin.demo.exception.NotFoundException;
 import com.magazin.demo.model.Privilege;
 import com.magazin.demo.model.Role;
 import com.magazin.demo.model.User;
 import com.magazin.demo.repository.RoleRepository;
 import com.magazin.demo.repository.UserRepository;
 import com.magazin.demo.service.UserService;
-import com.sun.xml.bind.v2.model.core.ID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
