@@ -36,5 +36,4 @@ public class ProductController {
         Product savedProduct = productService.addNewProduct(product);
         return new ResponseEntity<>(savedProduct, HttpStatus.OK);
     }
-
 }

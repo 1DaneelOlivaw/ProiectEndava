@@ -8,10 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Api(value = "Access to store customers", tags = "/customers")
 @RestController
@@ -22,9 +19,21 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @ApiOperation(value = "Find customer by ID")
-    @GetMapping("/{productId")
-    public ResponseEntity<Customer> getCustomer(@PathVariable int customerId){
+    @GetMapping("/{customerId")
+    public ResponseEntity<Customer> getCustomer(@PathVariable int customerId) {
         Customer customerById = customerService.getCustomer(customerId);
         return new ResponseEntity<>(customerById, HttpStatus.OK);
+    }
+    @ApiOperation(value =  "Delete customer by ID")
+    @DeleteMapping("/{customerId")
+    public ResponseEntity<Customer> deleteCustomer(@PathVariable int customerId) {
+        Customer customerById = customerService.deleteCustomer(customerId);
+        return new ResponseEntity<>(customerById, HttpStatus.OK);
+    }
+    @ApiOperation(value = "Update customer by ID")
+    @PutMapping()
+    public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer) {
+        Customer updatedCustomer = customerService.updateCustomer(customer.getId());
+        return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 }

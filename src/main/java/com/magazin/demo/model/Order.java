@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "orders")
@@ -22,6 +23,9 @@ public class Order {
     @OneToOne(targetEntity = User.class)
     @JoinColumn(name = "users_id")
     private Integer userId;
+
+    @OneToMany(mappedBy = "cart")
+    private Set<CartItem> cartItems;
 
     private String status;
 

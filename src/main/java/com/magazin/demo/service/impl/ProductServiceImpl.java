@@ -14,7 +14,9 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository){ this.productRepository = productRepository;}
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Override
     public Product getProductById (int productId){
@@ -34,7 +36,8 @@ public class ProductServiceImpl implements ProductService {
         savedProduct.setPrice(Optional.ofNullable(product.getPrice()).orElse(savedProduct.getPrice()));
         savedProduct.setStock(Optional.ofNullable(product.getStock()).orElse(savedProduct.getStock()));
         savedProduct.setPrice(Optional.ofNullable(product.getPrice()).orElse(savedProduct.getPrice()));
-    return productRepository.save(savedProduct);
+
+        return productRepository.save(savedProduct);
     }
 
     @Override
