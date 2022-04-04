@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface WishlistRepository extends JpaRepository<Wishlist, Integer> {
     //@Query("")
     Optional<Wishlist> findById(Integer id);
+
 }
