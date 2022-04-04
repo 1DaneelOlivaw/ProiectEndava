@@ -24,11 +24,13 @@ public class ProductController {
         Product productById = productService.getProductById(productId);
         return new ResponseEntity<>(productById, HttpStatus.OK);
     }
+    @ApiOperation(value = "Update product by ID")
     @PutMapping()
     public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
         Product savedProduct = productService.updateProduct(product);
         return new ResponseEntity<>(savedProduct, HttpStatus.OK);
     }
+    @ApiOperation(value = "Add new product by ID")
     @PostMapping()
     public ResponseEntity<Product> addNewProduct(@RequestBody Product product) {
         Product savedProduct = productService.addNewProduct(product);
