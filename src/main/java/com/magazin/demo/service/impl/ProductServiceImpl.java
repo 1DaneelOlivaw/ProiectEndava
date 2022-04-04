@@ -7,6 +7,7 @@ import com.magazin.demo.service.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -35,5 +36,16 @@ public class ProductServiceImpl implements ProductService {
         savedProduct.setPrice(Optional.ofNullable(product.getPrice()).orElse(savedProduct.getPrice()));
     return productRepository.save(savedProduct);
     }
+
+    @Override
+    public void deleteProduct(Product product) {
+        productRepository.delete(product);
+
+       /* Product currentProduct = getProductById(productId);
+        Set<Product> products = currentProduct.getProducts();
+        products.remove(product);
+        currentProduct.setProducts(products);
+        return ProductRepository.save(currentProduct);*/
     }
+}
 
