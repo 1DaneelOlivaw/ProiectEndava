@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Component
 public class SetupDataLoader implements
@@ -53,9 +54,10 @@ public class SetupDataLoader implements
                 readPrivilege, writePrivilege);
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege));
-
         Role adminRole = roleRepository.findByName("ROLE_ADMIN");
         User admin = new User();
+
+
         admin.setUsername("testUsername");
         admin.setPhoneNumber(0707);
         admin.setAddress("testAddress");
