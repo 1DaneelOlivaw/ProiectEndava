@@ -5,11 +5,14 @@ import com.magazin.demo.model.Product;
 import com.magazin.demo.repository.ProductRepository;
 import com.magazin.demo.service.ProductService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import springfox.documentation.spring.web.json.Json;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
@@ -21,7 +24,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductById (int productId){
         return productRepository.findById(productId).orElseThrow(
-                () -> new NotFoundException((String.format(" product with id %s could not be found", productId))));
+                () -> new NotFoundException((String.format("error message: product with id %s could not be found", productId))));
     }
 
     @Override
@@ -41,14 +44,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Product product) {
-        productRepository.delete(product);
+    public void deleteProduct(int productId) {
+        productRepository.deleteProduct(productId);
 
        /* Product currentProduct = getProductById(productId);
         Set<Product> products = currentProduct.getProducts();
         products.remove(product);
         currentProduct.setProducts(products);
         return ProductRepository.save(currentProduct);*/
+    }
+
+    @Override
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 }
 

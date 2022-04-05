@@ -1,10 +1,8 @@
 package com.magazin.demo;
 
-import com.magazin.demo.model.Customer;
-import com.magazin.demo.model.Privilege;
-import com.magazin.demo.model.Role;
-import com.magazin.demo.model.User;
+import com.magazin.demo.model.*;
 import com.magazin.demo.repository.PrivilegeRepository;
+import com.magazin.demo.repository.ProductRepository;
 import com.magazin.demo.repository.RoleRepository;
 import com.magazin.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +31,9 @@ public class SetupDataLoader implements
 
     @Autowired
     private PrivilegeRepository privilegeRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
 /*
     @Autowired
@@ -75,6 +76,9 @@ public class SetupDataLoader implements
         customer.setLastName("Burlacu");
         customer.setRoles(Arrays.asList(customerRole));
         userRepository.save(customer);
+
+        Product product = new Product("product A", 30f, true);
+        productRepository.save(product);
 
         alreadySetup = true;
     }

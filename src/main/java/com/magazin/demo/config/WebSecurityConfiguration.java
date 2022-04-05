@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -26,16 +27,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //http.csrf().disable();
+        http
+            .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
         // ... here goes your custom security configuration
         http.authorizeRequests().
-                antMatchers(AUTH_WHITELIST).permitAll();//. // whitelist URL permitted
+                antMatchers(AUTH_WHITELIST).permitAll().mvcMatchers("/products/**").permitAll();
+                //. // whitelist URL permitted
                 //antMatchers("/**").authenticated(); // others need auth
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-            registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-            registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
 }

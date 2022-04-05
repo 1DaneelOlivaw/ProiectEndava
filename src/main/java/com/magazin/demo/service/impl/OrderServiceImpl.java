@@ -24,14 +24,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order addNewOrder(int userId, int cartId) {
-        Order myOrder = new Order();
-        myOrder.setUserId(userId);
-        myOrder.setCartItems();
-        return orderRepository.save(userId, cartId);
-    }
-
-    @Override
     public Order updateOrder(Order order) {
         Order savedOrder = getOrdersByUserId(order.getId());
         savedOrder.setStatus(Optional.ofNullable(order.getStatus()).orElse(savedOrder.getStatus()));
@@ -40,7 +32,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrder(Order order) {
-        orderRepository.delete(order);
+    public void deleteOrder(int orderId) {
+        Order searchedOrder = orderRepository.findById(orderId).orElseThrow(
+                () -> new NotFoundException((String.format("orders with id %s could not be found", orderId))));
+        orderRepository.delete(searchedOrder);
+    }
+
+    @Override
+    public Order saveOrder(Order order) {
+        return  orderRepository.save(order);
     }
 }

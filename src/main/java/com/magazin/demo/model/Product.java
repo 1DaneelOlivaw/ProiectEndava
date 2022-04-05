@@ -19,4 +19,13 @@ public class Product {
     private Float price;
 
     private Boolean stock;
+
+    public Product(String name, Float price, Boolean stock) {
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+    }
+
+    public Product() {
+    }
 }
