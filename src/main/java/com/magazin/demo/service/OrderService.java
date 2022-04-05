@@ -6,9 +6,9 @@ public interface OrderService {
 
     Order getOrdersByUserId(int userId);
 
-    Order addNewOrder(int userId, int cartId);
-
     Order updateOrder(Order order);
 
-    void deleteOrder(Order order);
+    void deleteOrder(int orderId);
+
+    Order saveOrder(Order order);
 }

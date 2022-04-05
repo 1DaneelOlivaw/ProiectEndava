@@ -10,10 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Api(value ="Acces to customers wishlist", tags = "/wishlist")
+@Api(value ="Acces to customers wishlist", tags = "/wishlists")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping(value = "/wishlists")
 public class WishlistController {
 
     private final WishlistService wishlistService;

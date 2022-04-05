@@ -1,5 +1,6 @@
 package com.magazin.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +21,10 @@ public class Role {
 
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToMany
     @JoinTable(
@@ -34,5 +37,8 @@ public class Role {
 
     public Role(String name) {
         this.name = name;
+    }
+
+    public Role() {
     }
 }

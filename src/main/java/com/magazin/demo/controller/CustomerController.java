@@ -7,8 +7,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api(value = "Access to store customers", tags = "/customers")
 @RestController
@@ -18,14 +21,20 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Customer> getAllCustomers() {
+        return customerService.findAll();
+    }
+
+
     @ApiOperation(value = "Find customer by ID")
-    @GetMapping("/{customerId")
+    @GetMapping("/{customerId}")
     public ResponseEntity<Customer> getCustomer(@PathVariable int customerId) {
         Customer customerById = customerService.getCustomer(customerId);
         return new ResponseEntity<>(customerById, HttpStatus.OK);
     }
     @ApiOperation(value =  "Delete customer by ID")
-    @DeleteMapping("/{customerId")
+    @DeleteMapping("/{customerId}")
     public ResponseEntity<Customer> deleteCustomer(@PathVariable int customerId) {
         Customer customerById = customerService.deleteCustomer(customerId);
         return new ResponseEntity<>(customerById, HttpStatus.OK);
