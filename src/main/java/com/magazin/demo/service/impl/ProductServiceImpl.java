@@ -38,9 +38,16 @@ public class ProductServiceImpl implements ProductService {
         savedProduct.setName(Optional.ofNullable(product.getName()).orElse(savedProduct.getName()));
         savedProduct.setPrice(Optional.ofNullable(product.getPrice()).orElse(savedProduct.getPrice()));
         savedProduct.setStock(Optional.ofNullable(product.getStock()).orElse(savedProduct.getStock()));
-        savedProduct.setPrice(Optional.ofNullable(product.getPrice()).orElse(savedProduct.getPrice()));
+        //savedProduct.setPrice(Optional.ofNullable(product.getPrice()).orElse(savedProduct.getPrice()));
 
         return productRepository.save(savedProduct);
+    }
+
+    @Override
+    public Product getProductByName(String productName) {
+
+        return productRepository.getProductByName(productName).orElseThrow(
+                () -> new NotFoundException((String.format("error message: product with name %s could not be found", productName))));
     }
 
     @Override

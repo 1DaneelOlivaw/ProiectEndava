@@ -1,15 +1,18 @@
 package com.magazin.demo.service.impl;
 
-import com.magazin.demo.model.Privilege;
-import com.magazin.demo.model.Role;
+import com.magazin.demo.exception.UserAlreadyExistException;
 import com.magazin.demo.model.User;
-import com.magazin.demo.repository.RoleRepository;
+import com.magazin.demo.model.UserGroup;
+import com.magazin.demo.repository.UserGroupRepository;
 import com.magazin.demo.repository.UserRepository;
 import com.magazin.demo.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Resource;
 import java.util.*;
 
 public class UserServiceImpl implements UserService {
@@ -21,7 +24,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Autowired
-    private RoleRepository roleRepository;
+    private UserGroupRepository userGroupRepository;
+
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User getUserById(Integer id) {
@@ -29,48 +35,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public org.springframework.security.core.userdetails.User loadUserById(Integer id) {
-
-        User user = userRepository.findById(id);
-
-        if (user == null) {
-            return new org.springframework.security.core.userdetails.User(
-                    " ", " ", true, true, true, true,
-                    getAuthorities(Arrays.asList(
-                            roleRepository.findByName("ROLE_USER"))));
+    public void register(User user) throws UserAlreadyExistException {
+        if(checkIfUserExist(user.getUsername())){
+            throw new UserAlreadyExistException("User already exists for this username");
         }
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), true, true, true,
-                true, getAuthorities(user.getRoles()));
+        User userEntity = new User();
+        BeanUtils.copyProperties(user, userEntity);
+        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+        updateCustomerGroup(userEntity);
+        userRepository.save(userEntity);
     }
 
-
-    private Collection<? extends GrantedAuthority> getAuthorities(
-            Collection<Role> roles) {
-
-        return getGrantedAuthorities(getPrivileges(roles));
+    @Override
+    public boolean checkIfUserExist(String username) {
+        return userRepository.findUserByUsername(username)!=null ? true : false;
     }
 
-    private List<String> getPrivileges(Collection<Role> roles) {
-
-        List<String> privileges = new ArrayList<>();
-        List<Privilege> collection = new ArrayList<>();
-        for (Role role : roles) {
-            privileges.add(role.getName());
-            collection.addAll(role.getPrivileges());
-        }
-        for (Privilege item : collection) {
-            privileges.add(item.getName());
-        }
-        return privileges;
-    }
-
-    private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (String privilege : privileges) {
-            authorities.add(new SimpleGrantedAuthority(privilege));
-        }
-        return authorities;
+    private void updateCustomerGroup(User user){
+        UserGroup group= userGroupRepository.findByCode("customer");
+        Set<UserGroup> newGroups = user.getUserGroups();
+        newGroups.add(group);
+        user.setUserGroups(newGroups);
     }
 }

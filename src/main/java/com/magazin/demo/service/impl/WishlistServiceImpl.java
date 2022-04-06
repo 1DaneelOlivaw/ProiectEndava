@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+
 @Service
 public class WishlistServiceImpl implements WishlistService {
 
@@ -40,4 +41,16 @@ public class WishlistServiceImpl implements WishlistService {
         currentWishlist.setProducts(products);
         return wishlistRepository.save(currentWishlist);
     }
+
+    @Override
+    public void updateWishlist(int user, Set<Product> products) {
+        wishlistRepository.updateWishlist(user,products);
+    }
+
+    @Override
+    public Wishlist saveChanges(Wishlist wishlist) {
+        wishlistRepository.saveAndFlush(wishlist);
+        return wishlist;
+    }
+
 }

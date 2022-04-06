@@ -2,7 +2,6 @@ package com.magazin.demo.controller;
 
 import com.magazin.demo.model.Customer;
 import com.magazin.demo.service.CustomerService;
-import com.magazin.demo.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Api(value = "Access to store customers", tags = "/customers")
 @RestController
@@ -30,8 +30,8 @@ public class CustomerController {
     @ApiOperation(value = "Find customer by ID")
     @GetMapping("/{customerId}")
     public ResponseEntity<Customer> getCustomer(@PathVariable int customerId) {
-        Customer customerById = customerService.getCustomer(customerId);
-        return new ResponseEntity<>(customerById, HttpStatus.OK);
+        Optional<Customer> customerById = customerService.getCustomer(customerId);
+        return new ResponseEntity<>(customerById.get(), HttpStatus.OK);
     }
     @ApiOperation(value =  "Delete customer by ID")
     @DeleteMapping("/{customerId}")

@@ -1,25 +1,44 @@
 package com.magazin.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
 @Table(name="wishlist")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Wishlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonIgnore
     @OneToOne
-    @JoinColumn(name = "customer_id")
     private Customer customerId;
 
-    @ManyToMany
-    @JoinColumn(name = "products")
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST
+    })/*
+    @JoinTable(name = "wishlist_products",
+            joinColumns =@JoinColumn(name = "wishlist_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"
+            ))*/
+    @Column(name = "products")
     private Set<Product> products;
+
+    public Wishlist(Customer customer) {
+        this.customerId = customer;
+    }
+
+    public Wishlist(Customer customerId, Set<Product> products) {
+        this.customerId = customerId;
+        this.products = products;
+    }
 }

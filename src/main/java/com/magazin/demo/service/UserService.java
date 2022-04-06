@@ -10,5 +10,7 @@ public interface UserService {
 
         User getUserById(Integer id);
 
-        org.springframework.security.core.userdetails.User loadUserById(Integer id);
+        public void register(User user);
+
+        boolean checkIfUserExist(String username);
 }

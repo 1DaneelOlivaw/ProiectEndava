@@ -7,6 +7,7 @@ import com.magazin.demo.service.CustomerService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl extends UserServiceImpl implements CustomerService {
@@ -22,9 +23,8 @@ public class CustomerServiceImpl extends UserServiceImpl implements CustomerServ
     }
 
     @Override
-    public Customer getCustomer(int userId) {
-
-        return null;
+    public Optional<Customer> getCustomer(int userId) {
+    return customerRepository.findById(String.valueOf(userId));
     }
 
     @Override
