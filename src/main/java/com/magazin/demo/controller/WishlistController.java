@@ -2,8 +2,6 @@ package com.magazin.demo.controller;
 
 import com.magazin.demo.model.Product;
 import com.magazin.demo.model.Wishlist;
-import com.magazin.demo.repository.CustomerRepository;
-import com.magazin.demo.repository.UserRepository;
 import com.magazin.demo.service.CustomerService;
 import com.magazin.demo.service.ProductService;
 import com.magazin.demo.service.WishlistService;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@Api(value ="Acces to customers wishlist", tags = "/wishlists")
+@Api(value ="Access to customers wishlist", tags = "/wishlists")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/wishlists")
@@ -28,7 +26,12 @@ public class WishlistController {
     private final ProductService productService;
     private final CustomerService customerService;
 
-    @ApiOperation(value = "Find wishilist by userID")
+    @ApiOperation(value = "Find wishlist by userID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Wishlist found!"),
+            @ApiResponse(code = 401, message = "Login needed before performing this operation"),
+            @ApiResponse(code = 403, message = "User does not have enough privileges"),
+            @ApiResponse(code = 404, message = "Something went wrong, products not found") })
     @GetMapping("/{userId}")
     public ResponseEntity<Wishlist> getWishlist(@PathVariable int userId){
      Wishlist wishlistById = wishlistService.getWishlist(userId);
@@ -42,15 +45,14 @@ public class WishlistController {
             @ApiResponse(code = 403, message = "User does not have enough privileges"),
             @ApiResponse(code = 404, message = "Something went wrong, products not found") })
     @PutMapping("/{userId}/{productName}")
-    public ResponseEntity<Wishlist> addProductById(@PathVariable int userId,@PathVariable String productName)
-    {
+    public ResponseEntity<Wishlist> addProductByName(@PathVariable int userId, @PathVariable String productName) {
+
        Wishlist initalWishlist = wishlistService.getWishlist(userId);
        Product newProduct = productService.getProductByName(productName);
        Set<Product> productsInWishlist = initalWishlist.getProducts();
        productsInWishlist.add(newProduct);
        initalWishlist.setProducts(productsInWishlist);
        wishlistService.saveChanges(initalWishlist);
-       //wishlistService.updateWishlist(userId, productsInWishlist);
        return new ResponseEntity<>(wishlistService.getWishlist(userId), HttpStatus.OK);
     }
 
@@ -61,7 +63,7 @@ public class WishlistController {
             @ApiResponse(code = 403, message = "User does not have enough privileges"),
             @ApiResponse(code = 404, message = "Product not found") })
     @DeleteMapping("/{userId}/{productName}")
-    public ResponseEntity<Wishlist> deleteProductById(@PathVariable int userId,@PathVariable String productName)
+    public ResponseEntity<Wishlist> deleteProductByName(@PathVariable int userId, @PathVariable String productName)
     {
         Wishlist initialWishlist = wishlistService.getWishlist(userId);
         Product newProduct = productService.getProductByName(productName);
@@ -69,7 +71,6 @@ public class WishlistController {
         productSet.remove(newProduct);
         initialWishlist.setProducts(productSet);
         wishlistService.saveChanges(initialWishlist);
-        //wishlistService.updateWishlist(userId, productSet);
         return new ResponseEntity<>(wishlistService.getWishlist(userId), HttpStatus.OK);
     }
 

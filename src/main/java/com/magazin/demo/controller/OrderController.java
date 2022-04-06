@@ -1,6 +1,5 @@
 package com.magazin.demo.controller;
 
-import com.magazin.demo.model.Customer;
 import com.magazin.demo.model.Order;
 import com.magazin.demo.service.OrderService;
 import io.swagger.annotations.Api;
@@ -19,7 +18,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @ApiOperation(value = "Find order by userId")
-    @GetMapping("{ordedrId}")
+    @GetMapping("{orderId}")
     public ResponseEntity<Order> getOrder(@PathVariable int orderId){
         Order orderById = orderService.getOrdersByUserId(orderId);
         return new ResponseEntity<>(orderById, HttpStatus.OK);
@@ -28,7 +27,7 @@ public class OrderController {
     @ApiOperation(value = "Add a new order")
     @PostMapping()
     public ResponseEntity<Order> addNewOrder(@RequestBody Order order) {
-        Order savedOrder = orderService.saveOrder(order);
+        Order savedOrder = orderService.saveOrder(, order, );
         return new ResponseEntity<>(savedOrder, HttpStatus.OK);
     }
 

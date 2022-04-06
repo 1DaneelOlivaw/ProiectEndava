@@ -1,5 +1,6 @@
 package com.magazin.demo.service.impl;
 
+import com.magazin.demo.exception.NotFoundException;
 import com.magazin.demo.model.Cart;
 import com.magazin.demo.repository.CartRepository;
 import com.magazin.demo.service.CartService;
@@ -15,14 +16,21 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart addCartItem() {
-
-        return null;
+    public Cart getCart(int userId) {
+        return cartRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException((String.format("cart with userId %s could not be loaded", userId)))
+        );
     }
 
     @Override
-    public Cart deleteCartItem() {
+    public Cart saveChanges(Cart cart) {
+        cartRepository.saveAndFlush(cart);
+        return cart;
+    }
 
-        return null;
+    @Override
+    public Cart BuyCartItems(Cart cart) {
+        cartRepository.saveAndFlush(cart);
+        return cart;
     }
 }

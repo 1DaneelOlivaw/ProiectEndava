@@ -25,7 +25,7 @@ public class WishlistServiceImpl implements WishlistService {
                 () -> new NotFoundException((String.format("wishlist with userId %s could not be found", userId))));
     }
 
-    public Wishlist addProductById(int usedId, Product product) {
+    public Wishlist addProductByName(int usedId, Product product) {
         Wishlist currentWishlist = getWishlist(usedId);
         Set<Product> products =  currentWishlist.getProducts();
         products.add(product);
@@ -34,7 +34,7 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-    public Wishlist deleteProductById(int userId, Product product) {
+    public Wishlist deleteProductByName(int userId, Product product) {
         Wishlist currentWishlist = getWishlist(userId);
         Set<Product> products =  currentWishlist.getProducts();
         products.remove(product);
