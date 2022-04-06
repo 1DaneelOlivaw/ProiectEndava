@@ -9,9 +9,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-
-    @Query(value = "SELECT FROM products p WHERE p.name = :product_name", nativeQuery = true)
-    Optional<Product> getProductByName(@Param("product_name") String name);
+    @Query("Select p From Product p where p.name=:name")
+    Optional<Product> getProductByName( String name);
 
     @Modifying
     @Query(value = "DELETE FROM products p WHERE p.id = :productId", nativeQuery = true)

@@ -79,7 +79,7 @@ public class ProductController {
             @ApiResponse(code = 401, message = "Login needed before performing this operation"),
             @ApiResponse(code = 403, message = "User does not have enough privileges"),
             @ApiResponse(code = 404, message = "Product not found") })
-    @DeleteMapping("/{productId}")
+    @DeleteMapping("/{productId}") //TODO zice ca sterge si daca nu gaseste id-ul
     public ResponseEntity<Product> deleteProduct(@PathVariable int productId){
         productService.deleteProduct(productId);
         return new ResponseEntity<>(HttpStatus.valueOf(204));

@@ -1,10 +1,7 @@
 package com.magazin.demo;
 
 import com.magazin.demo.model.*;
-import com.magazin.demo.repository.PrivilegeRepository;
-import com.magazin.demo.repository.ProductRepository;
-import com.magazin.demo.repository.RoleRepository;
-import com.magazin.demo.repository.UserRepository;
+import com.magazin.demo.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -12,10 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.*;
 
 @Component
 public class SetupDataLoader implements
@@ -27,18 +21,19 @@ public class SetupDataLoader implements
     private UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private UserGroupRepository userGroupRepository;
 
     @Autowired
-    private PrivilegeRepository privilegeRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
     private ProductRepository productRepository;
 
-/*
+    @Autowired
+    private WishlistRepository wishlistRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
-*/
 
     @Override
     @Transactional
@@ -46,64 +41,37 @@ public class SetupDataLoader implements
 
         if (alreadySetup)
             return;
-        Privilege readPrivilege
-                = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        Privilege writePrivilege
-                = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
+        UserGroup customerGroup = new UserGroup("customer","CUSTOMER");
+        userGroupRepository.save(customerGroup);
+        UserGroup adminGroup = new UserGroup("admin","ADMIN");
+        userGroupRepository.save(adminGroup);
 
-        List<Privilege> adminPrivileges = Arrays.asList(
-                readPrivilege, writePrivilege);
-        createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege));
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN");
         User admin = new User();
-
-
-        admin.setUsername("testUsername");
+        admin.setUsername("myAdmin");
         admin.setPhoneNumber(0707);
-        admin.setAddress("testAddress");
-        admin.setPassword("testPassword");//passwordEncoder.encode("testPassword"));
-        admin.setRoles(Arrays.asList(adminRole));
+        admin.setAddress("myAddress");
+        admin.setPassword(passwordEncoder.encode("myPassword"));
+        admin.setUserGroups(new HashSet<UserGroup>(Arrays.asList(adminGroup)));
         userRepository.save(admin);
 
-        Role customerRole = roleRepository.findByName("ROLE_USER");
+        Product product = new Product("productA", 30f, true);
+        productRepository.save(product);
+        Product product2 = new Product("productB", 50f, true);
+        productRepository.save(product2);
+
         Customer customer = new Customer();
         customer.setUsername("danielb");
         customer.setPhoneNumber(0404);
         customer.setAddress("myAddress");
-        customer.setPassword("proiectEndava");//passwordEncoder.encode("proiectEndava"));
+        customer.setPassword(passwordEncoder.encode("proiectEndava"));
         customer.setFirstName("Daniel");
         customer.setLastName("Burlacu");
-        customer.setRoles(Arrays.asList(customerRole));
-        userRepository.save(customer);
-
-        Product product = new Product("product A", 30f, true);
-        productRepository.save(product);
+        customer.setUserGroups(new HashSet<UserGroup>(Arrays.asList(customerGroup)));
+        customerRepository.save(customer);
+        //Wishlist wishlist = new Wishlist(customer, new HashSet<>(Arrays.asList(product)));
+        Wishlist wishlist = new Wishlist(customer);
+        wishlistRepository.save(wishlist);
 
         alreadySetup = true;
-    }
-
-    @Transactional
-    Privilege createPrivilegeIfNotFound(String name) {
-
-        Privilege privilege = privilegeRepository.findByName(name);
-        if (privilege == null) {
-            privilege = new Privilege(name);
-            privilegeRepository.save(privilege);
-        }
-        return privilege;
-    }
-
-    @Transactional
-    Role createRoleIfNotFound(
-            String name, Collection<Privilege> privileges) {
-
-        Role role = roleRepository.findByName(name);
-        if (role == null) {
-            role = new Role(name);
-            role.setPrivileges(privileges);
-            roleRepository.save(role);
-        }
-        return role;
     }
 }

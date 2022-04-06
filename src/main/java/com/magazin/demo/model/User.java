@@ -1,26 +1,30 @@
 package com.magazin.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Integer id;
 
     @NotNull
     private Integer phoneNumber;
 
     @NotNull
+    @Column(unique = true)
     private String username;
 
     @NotNull
@@ -28,6 +32,15 @@ public class User {
 
     private String address;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Role> roles;
+    @JsonIgnore
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "user_groups",
+            joinColumns =@JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"
+            ))
+    private Set<UserGroup> userGroups;
+
 }

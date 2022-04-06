@@ -1,11 +1,14 @@
 package com.magazin.demo.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -22,20 +25,32 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
             "/configuration/ui",
             "/configuration/security",
             "/swagger-ui.html",
-            "/webjars/**"
+            "/webjars/**",
+            "/products/**",
+            "/wishlists/**",
+            "/customers/**"
     };
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //http.csrf().disable();
-        http
+        /*http
             .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-
-        // ... here goes your custom security configuration
+        */
+        http
+                .cors().disable()
+                .csrf().disable();
+        http.httpBasic();
         http.authorizeRequests().
-                antMatchers(AUTH_WHITELIST).permitAll().mvcMatchers("/products/**").permitAll();
-                //. // whitelist URL permitted
-                //antMatchers("/**").authenticated(); // others need auth
+                antMatchers(AUTH_WHITELIST).permitAll();
+                //.mvcMatchers("/products/**").hasAuthority("ADMIN")//.permitAll()
+                //.mvcMatchers("/customers/**").hasAuthority("CUSTOMER")
+                //.anyRequest().authenticated();
     }
 
 }
