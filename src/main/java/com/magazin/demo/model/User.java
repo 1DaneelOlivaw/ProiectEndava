@@ -21,7 +21,7 @@ public class User {
     private Integer id;
 
     @NotNull
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     @NotNull
     @Column(unique = true)

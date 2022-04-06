@@ -48,29 +48,64 @@ public class SetupDataLoader implements
 
         User admin = new User();
         admin.setUsername("myAdmin");
-        admin.setPhoneNumber(0707);
+        admin.setPhoneNumber("0707707070");
         admin.setAddress("myAddress");
         admin.setPassword(passwordEncoder.encode("myPassword"));
         admin.setUserGroups(new HashSet<UserGroup>(Arrays.asList(adminGroup)));
         userRepository.save(admin);
 
+        User admin1 = new User();
+        admin1.setUsername("myAdmin");
+        admin1.setPhoneNumber("0707707071");
+        admin1.setAddress("myAddress");
+        admin1.setPassword(passwordEncoder.encode("myPassword1"));
+        admin1.setUserGroups(new HashSet<UserGroup>(Arrays.asList(adminGroup)));
+        userRepository.save(admin1);
+
         Product product = new Product("productA", 30f, true);
         productRepository.save(product);
         Product product2 = new Product("productB", 50f, true);
         productRepository.save(product2);
+        Product product3 = new Product("productC", 65.5f, true);
+        productRepository.save(product3);
+        Product product4 = new Product("productD", 10f, false);
+        productRepository.save(product4);
 
         Customer customer = new Customer();
-        customer.setUsername("danielb");
-        customer.setPhoneNumber(0404);
+        customer.setUsername("willSlappin");
+        customer.setPhoneNumber("0740869966");
         customer.setAddress("myAddress");
-        customer.setPassword(passwordEncoder.encode("proiectEndava"));
-        customer.setFirstName("Daniel");
-        customer.setLastName("Burlacu");
+        customer.setPassword(passwordEncoder.encode("Willy"));
+        customer.setFirstName("Will");
+        customer.setLastName("Smith");
         customer.setUserGroups(new HashSet<UserGroup>(Arrays.asList(customerGroup)));
         customerRepository.save(customer);
-        //Wishlist wishlist = new Wishlist(customer, new HashSet<>(Arrays.asList(product)));
         Wishlist wishlist = new Wishlist(customer);
         wishlistRepository.save(wishlist);
+
+        Customer customer1 = new Customer();
+        customer1.setUsername("chrisCryin");
+        customer1.setPhoneNumber("0740587666");
+        customer1.setAddress("myAddress");
+        customer1.setPassword(passwordEncoder.encode("Chrissy"));
+        customer1.setFirstName("Chris");
+        customer1.setLastName("Rock");
+        customer1.setUserGroups(new HashSet<UserGroup>(Arrays.asList(customerGroup)));
+        customerRepository.save(customer1);
+        Wishlist wishlist1 = new Wishlist(customer1);
+        wishlistRepository.save(wishlist1);
+
+        Customer customer2 = new Customer();
+        customer2.setUsername("denzelWacthcin");
+        customer2.setPhoneNumber("0740587634");
+        customer2.setAddress("myAddress");
+        customer2.setPassword(passwordEncoder.encode("Denzel"));
+        customer2.setFirstName("Denzel");
+        customer2.setLastName("Washington");
+        customer2.setUserGroups(new HashSet<UserGroup>(Arrays.asList(customerGroup)));
+        customerRepository.save(customer1);
+        Wishlist wishlist2 = new Wishlist(customer2);
+        wishlistRepository.save(wishlist2);
 
         alreadySetup = true;
     }

@@ -10,5 +10,5 @@ public interface OrderService {
 
     void deleteOrder(int orderId);
 
-    Order saveOrder(Order order);
+    Order saveOrder(int userId, int cartId);
 }
