@@ -6,7 +6,8 @@ import com.magazin.demo.repository.OrderRepository;
 import com.magazin.demo.service.OrderService;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -18,17 +19,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getOrdersByUserId(int userId) {
-        return orderRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException((String.format("orders with id %s could not be found", userId))));
+    public Order getOrderById(int orderId) {
+        return orderRepository.findById(orderId).orElseThrow(
+                () -> new NotFoundException((String.format("the order with id %s could not be found", orderId))));
     }
 
     @Override
-    public Order updateOrder(Order order) {
-        Order savedOrder = getOrdersByUserId(order.getId());
-        savedOrder.setStatus(Optional.ofNullable(order.getStatus()).orElse(savedOrder.getStatus()));
-
-        return orderRepository.save(savedOrder);
+    public Order updateOrderStatus(Order order, String status) {
+        order.setStatus(status);
+        order.setLastModified(new Timestamp(System.currentTimeMillis()));
+        return orderRepository.save(order);
     }
 
     @Override
@@ -39,7 +39,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order saveOrder(int userId, int cartId) {
+    public Order saveOrder(Order order) {
         return  orderRepository.save(order);
+    }
+
+    @Override
+    public List<Order> findAll() {
+        return orderRepository.findAll();
     }
 }

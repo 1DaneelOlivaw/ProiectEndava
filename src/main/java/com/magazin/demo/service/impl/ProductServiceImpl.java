@@ -6,7 +6,6 @@ import com.magazin.demo.repository.ProductRepository;
 import com.magazin.demo.service.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import springfox.documentation.spring.web.json.Json;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,12 +52,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(int productId) {
         productRepository.deleteProduct(productId);
-
-       /* Product currentProduct = getProductById(productId);
-        Set<Product> products = currentProduct.getProducts();
-        products.remove(product);
-        currentProduct.setProducts(products);
-        return ProductRepository.save(currentProduct);*/
     }
 
     @Override

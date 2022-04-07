@@ -56,7 +56,7 @@ public class ProductController {
     public ResponseEntity<Product> updateProduct(@PathVariable int productId, @RequestBody Product product) {
         Objects.requireNonNull(product);
         Product savedProduct = productService.getProductById(productId);
-        product.setId(savedProduct.getId());
+        product.setId(savedProduct.getId());// ca sa nu pot modifica id-ul
         productService.updateProduct(product);
         return new ResponseEntity<>(savedProduct, HttpStatus.OK);
     }

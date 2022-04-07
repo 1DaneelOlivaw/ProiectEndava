@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -25,11 +24,7 @@ public class Wishlist {
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST
-    })/*
-    @JoinTable(name = "wishlist_products",
-            joinColumns =@JoinColumn(name = "wishlist_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"
-            ))*/
+    })
     @Column(name = "products")
     private Set<Product> products;
 

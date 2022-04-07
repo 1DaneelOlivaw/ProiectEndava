@@ -8,8 +8,6 @@ import com.magazin.demo.repository.UserRepository;
 import com.magazin.demo.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.Resource;
@@ -48,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkIfUserExist(String username) {
-        return userRepository.findUserByUsername(username)!=null ? true : false;
+        return userRepository.findUserByUsername(username).isPresent();
     }
 
     private void updateCustomerGroup(User user){
