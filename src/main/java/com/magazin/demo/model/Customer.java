@@ -25,4 +25,11 @@ public class Customer extends User {
     @OneToOne(mappedBy = "customerId")
     private Wishlist wishlist;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "customerId")
+    private Cart cart;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "customerId")
+    private Order order;
 }

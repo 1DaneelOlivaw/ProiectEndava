@@ -24,17 +24,18 @@ public class CustomerServiceImpl extends UserServiceImpl implements CustomerServ
 
     @Override
     public Optional<Customer> getCustomer(int userId) {
-    return customerRepository.findById(String.valueOf(userId));
+        return customerRepository.getCustomerById(userId);
     }
 
     @Override
-    public Customer deleteCustomer(int userId) {
-
-        return null;
+    public void deleteCustomer(Customer customer) {
+        customerRepository.delete(customer);
     }
 
     @Override
-    public Customer updateCustomer(int userId) {
-        return null;
+    public Customer updateCustomer(int userId, Customer customer) {
+        customer.setId(userId);
+        customerRepository.save(customer);
+        return customer;
     }
 }

@@ -2,15 +2,13 @@ package com.magazin.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -39,17 +37,34 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter imple
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //http.csrf().disable();
-        /*http
-            .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-        */
+        //http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+
         http
                 .cors().disable()
                 .csrf().disable();
+
         http.httpBasic();
+
         http.authorizeRequests().
                 antMatchers(AUTH_WHITELIST).permitAll();
-                //.mvcMatchers("/products/**").hasAuthority("ADMIN")//.permitAll()
-                //.mvcMatchers("/customers/**").hasAuthority("CUSTOMER")
+
+                // rules for /cart
+        //        .mvcMatchers(HttpMethod.GET,"/cart/**").hasAuthority("CUSTOMER")
+        //        .mvcMatchers(HttpMethod.PUT,"/cart/**","/cart/**/**").hasAuthority("CUSTOMER")
+        //        .mvcMatchers(HttpMethod.DELETE,"/cart/**").hasAuthority("CUSTOMER")
+                // rules for /customers
+        //        .mvcMatchers(HttpMethod.GET,"/customers").hasAuthority("ADMIN")
+        //        .mvcMatchers(HttpMethod.GET,"/customers/**").hasAuthority("CUSTOMER")
+        //        .mvcMatchers(HttpMethod.PUT,"/customers/**").hasAuthority("CUSTOMER")
+        //        .mvcMatchers(HttpMethod.DELETE,"/customers/**").hasAuthority("CUSTOMER")
+                // rules for /orders
+        //        .mvcMatchers(HttpMethod.GET,"/orders", "/orders/**").hasAuthority("ADMIN")
+        //        .mvcMatchers(HttpMethod.GET,"/orders/**").hasAuthority("CUSTOMER")
+        //        .mvcMatchers(HttpMethod.PUT,"/orders/**").hasAuthority("ADMIN")
+        //        .mvcMatchers(HttpMethod.DELETE,"/orders/**").hasAuthority("CUSTOMER")
+
+                //TODO cum trebuie??
+
                 //.anyRequest().authenticated();
     }
 

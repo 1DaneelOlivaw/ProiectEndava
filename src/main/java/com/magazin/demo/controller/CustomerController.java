@@ -31,18 +31,21 @@ public class CustomerController {
     @GetMapping("/{customerId}")
     public ResponseEntity<Customer> getCustomer(@PathVariable int customerId) {
         Optional<Customer> customerById = customerService.getCustomer(customerId);
-        return new ResponseEntity<>(customerById.get(), HttpStatus.OK);
+        return new ResponseEntity<>(customerById.orElseThrow(), HttpStatus.OK);
     }
+
     @ApiOperation(value =  "Delete customer by ID")
     @DeleteMapping("/{customerId}")
     public ResponseEntity<Customer> deleteCustomer(@PathVariable int customerId) {
-        Customer customerById = customerService.deleteCustomer(customerId);
-        return new ResponseEntity<>(customerById, HttpStatus.OK);
+        Customer customer = customerService.getCustomer(customerId).orElseThrow();
+        customerService.deleteCustomer(customer);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @ApiOperation(value = "Update customer by ID")
-    @PutMapping()
-    public ResponseEntity<Customer> updateCustomer(@RequestBody Customer customer) {
-        Customer updatedCustomer = customerService.updateCustomer(customer.getId());
+    @PutMapping("/{customerId}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable int customerId, @RequestBody Customer customer) {
+        Customer updatedCustomer = customerService.updateCustomer(customerId, customer);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 }

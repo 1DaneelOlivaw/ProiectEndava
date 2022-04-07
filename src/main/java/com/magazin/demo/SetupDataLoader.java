@@ -33,6 +33,9 @@ public class SetupDataLoader implements
     private WishlistRepository wishlistRepository;
 
     @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -51,15 +54,15 @@ public class SetupDataLoader implements
         admin.setPhoneNumber("0707707070");
         admin.setAddress("myAddress");
         admin.setPassword(passwordEncoder.encode("myPassword"));
-        admin.setUserGroups(new HashSet<UserGroup>(Arrays.asList(adminGroup)));
+        admin.setUserGroups(new HashSet<UserGroup>(List.of(adminGroup)));
         userRepository.save(admin);
 
         User admin1 = new User();
-        admin1.setUsername("myAdmin");
+        admin1.setUsername("myAdmin1");
         admin1.setPhoneNumber("0707707071");
         admin1.setAddress("myAddress");
         admin1.setPassword(passwordEncoder.encode("myPassword1"));
-        admin1.setUserGroups(new HashSet<UserGroup>(Arrays.asList(adminGroup)));
+        admin1.setUserGroups(new HashSet<UserGroup>(List.of(adminGroup)));
         userRepository.save(admin1);
 
         Product product = new Product("productA", 30f, true);
@@ -78,10 +81,12 @@ public class SetupDataLoader implements
         customer.setPassword(passwordEncoder.encode("Willy"));
         customer.setFirstName("Will");
         customer.setLastName("Smith");
-        customer.setUserGroups(new HashSet<UserGroup>(Arrays.asList(customerGroup)));
+        customer.setUserGroups(new HashSet<UserGroup>(List.of(customerGroup)));
         customerRepository.save(customer);
         Wishlist wishlist = new Wishlist(customer);
         wishlistRepository.save(wishlist);
+        Cart cart = new Cart(customer,0f,0);
+        cartRepository.save(cart);
 
         Customer customer1 = new Customer();
         customer1.setUsername("chrisCryin");
@@ -90,20 +95,20 @@ public class SetupDataLoader implements
         customer1.setPassword(passwordEncoder.encode("Chrissy"));
         customer1.setFirstName("Chris");
         customer1.setLastName("Rock");
-        customer1.setUserGroups(new HashSet<UserGroup>(Arrays.asList(customerGroup)));
+        customer1.setUserGroups(new HashSet<UserGroup>(List.of(customerGroup)));
         customerRepository.save(customer1);
         Wishlist wishlist1 = new Wishlist(customer1);
         wishlistRepository.save(wishlist1);
 
         Customer customer2 = new Customer();
-        customer2.setUsername("denzelWacthcin");
+        customer2.setUsername("denzelWatchin");
         customer2.setPhoneNumber("0740587634");
         customer2.setAddress("myAddress");
         customer2.setPassword(passwordEncoder.encode("Denzel"));
         customer2.setFirstName("Denzel");
         customer2.setLastName("Washington");
-        customer2.setUserGroups(new HashSet<UserGroup>(Arrays.asList(customerGroup)));
-        customerRepository.save(customer1);
+        customer2.setUserGroups(new HashSet<UserGroup>(List.of(customerGroup)));
+        customerRepository.save(customer2);
         Wishlist wishlist2 = new Wishlist(customer2);
         wishlistRepository.save(wishlist2);
 

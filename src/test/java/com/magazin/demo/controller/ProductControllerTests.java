@@ -35,6 +35,7 @@ public class ProductControllerTests {
 
     private static final Logger log = LoggerFactory.getLogger(ProductControllerTests.class);
 
+    //TODO teste..
 
     @Test
     public void givenProducts_whenGetProducts_thenReturnJsonArray() throws Exception {

@@ -2,11 +2,12 @@ package com.magazin.demo.service;
 
 import com.magazin.demo.model.Cart;
 
+import java.util.Optional;
+
 
 public interface CartService {
 
-    Cart getCart(int userId);
+    Optional<Cart> getUserCart(int userId);
     Cart saveChanges(Cart cart);
-    Cart BuyCartItems(Cart cart);
-
+    void deleteCart(Cart cart);
 }

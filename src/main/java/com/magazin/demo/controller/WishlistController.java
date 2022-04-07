@@ -2,7 +2,6 @@ package com.magazin.demo.controller;
 
 import com.magazin.demo.model.Product;
 import com.magazin.demo.model.Wishlist;
-import com.magazin.demo.service.CustomerService;
 import com.magazin.demo.service.ProductService;
 import com.magazin.demo.service.WishlistService;
 import io.swagger.annotations.Api;
@@ -24,7 +23,6 @@ public class WishlistController {
 
     private final WishlistService wishlistService;
     private final ProductService productService;
-    private final CustomerService customerService;
 
     @ApiOperation(value = "Find wishlist by userID")
     @ApiResponses(value = {
@@ -47,12 +45,12 @@ public class WishlistController {
     @PutMapping("/{userId}/{productName}")
     public ResponseEntity<Wishlist> addProductByName(@PathVariable int userId, @PathVariable String productName) {
 
-       Wishlist initalWishlist = wishlistService.getWishlist(userId);
+       Wishlist initialWishlist = wishlistService.getWishlist(userId);
        Product newProduct = productService.getProductByName(productName);
-       Set<Product> productsInWishlist = initalWishlist.getProducts();
+       Set<Product> productsInWishlist = initialWishlist.getProducts();
        productsInWishlist.add(newProduct);
-       initalWishlist.setProducts(productsInWishlist);
-       wishlistService.saveChanges(initalWishlist);
+       initialWishlist.setProducts(productsInWishlist);
+       wishlistService.saveChanges(initialWishlist);
        return new ResponseEntity<>(wishlistService.getWishlist(userId), HttpStatus.OK);
     }
 
@@ -68,6 +66,9 @@ public class WishlistController {
         Wishlist initialWishlist = wishlistService.getWishlist(userId);
         Product newProduct = productService.getProductByName(productName);
         Set<Product> productSet = initialWishlist.getProducts();
+        if (!productSet.contains(newProduct)) {
+            return new ResponseEntity<>(wishlistService.getWishlist(userId), HttpStatus.NOT_FOUND);
+        }
         productSet.remove(newProduct);
         initialWishlist.setProducts(productSet);
         wishlistService.saveChanges(initialWishlist);

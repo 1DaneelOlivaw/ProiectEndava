@@ -1,13 +1,11 @@
 package com.magazin.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -21,21 +19,27 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne(targetEntity = User.class)
-    @JoinColumn(name = "users_id")
-    private Integer userId;
+    @JsonIgnore
+    @OneToOne
+    private Customer customerId;
 
-    @OneToMany(mappedBy = "products")
-    private Set<Product> products;
+    @JsonIgnore
+    @ManyToMany()
+    private Set<Product> cartProducts;
 
     private Float totalPrice;
 
     private Integer totalItems;
 
-    public Cart(Integer id, Integer userId, Set<Product> products, Float totalPrice, Integer totalItems) {
-        this.id = id;
-        this.userId = userId;
-        this.products = products;
+    public Cart(Customer customerId, Set<Product> cartProducts, Float totalPrice, Integer totalItems) {
+        this.customerId = customerId;
+        this.cartProducts = cartProducts;
+        this.totalPrice = totalPrice;
+        this.totalItems = totalItems;
+    }
+
+    public Cart(Customer customerId, Float totalPrice, Integer totalItems) {
+        this.customerId = customerId;
         this.totalPrice = totalPrice;
         this.totalItems = totalItems;
     }

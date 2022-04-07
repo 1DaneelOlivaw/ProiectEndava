@@ -35,6 +35,14 @@ public class Product {
         this.stock = stock;
     }
 
+    @JsonIgnore
+    @ManyToMany(mappedBy = "orderProducts")
+    private Set<Order> orders;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "cartProducts")
+    private Set<Cart> carts;
+
     public Product() {
     }
 }

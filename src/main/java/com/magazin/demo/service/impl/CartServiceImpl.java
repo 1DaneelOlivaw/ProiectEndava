@@ -1,10 +1,11 @@
 package com.magazin.demo.service.impl;
 
-import com.magazin.demo.exception.NotFoundException;
 import com.magazin.demo.model.Cart;
 import com.magazin.demo.repository.CartRepository;
 import com.magazin.demo.service.CartService;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -16,10 +17,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart getCart(int userId) {
-        return cartRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException((String.format("cart with userId %s could not be loaded", userId)))
-        );
+    public Optional<Cart> getUserCart(int userId) {
+        return cartRepository.getCartByCustomerId(userId);
     }
 
     @Override
@@ -29,8 +28,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart BuyCartItems(Cart cart) {
-        cartRepository.saveAndFlush(cart);
-        return cart;
+    public void deleteCart(Cart cart) {
+        cartRepository.delete(cart);
     }
+
 }

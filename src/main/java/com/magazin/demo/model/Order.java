@@ -1,6 +1,8 @@
 package com.magazin.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import java.util.Set;
 @Table(name = "orders")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Order {
 
     @Id
@@ -20,17 +23,27 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;
 
-    @OneToOne(targetEntity = User.class)
-    @JoinColumn(name = "users_id")
-    private Integer userId;
+    @JsonIgnore
+    @OneToOne
+    private Customer customerId;
 
-    @OneToMany(mappedBy = "cart")
-    private Set<CartItem> cartItems;
+    @JsonIgnore
+    @ManyToMany()
+    private Set<Product> orderProducts;
 
     private String status;
 
 
+    public Order(Date lastModified, Customer customerId, Set<Product> orderProducts, String status) {
+        this.lastModified = lastModified;
+        this.customerId = customerId;
+        this.orderProducts = orderProducts;
+        this.status = status;
+    }
 
-
-
+    public Order(Date lastModified, Customer customerId, String status) {
+        this.lastModified = lastModified;
+        this.customerId = customerId;
+        this.status = status;
+    }
 }
