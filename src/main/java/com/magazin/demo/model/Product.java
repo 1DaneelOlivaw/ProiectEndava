@@ -14,13 +14,17 @@ import java.util.Set;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String name;
 
     private Float price;
 
     private Boolean stock;
+
+    @ManyToOne
+    //@JoinColumn(name = "vendor_id", insertable = false, updatable = false)
+    private User vendor;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "products",

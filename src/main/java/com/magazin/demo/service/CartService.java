@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CartService {
 
-    Optional<Cart> getUserCart(int userId);
+    Optional<Cart> getUserCart(String username);
     Cart saveChanges(Cart cart);
     void deleteCart(Cart cart);
 }

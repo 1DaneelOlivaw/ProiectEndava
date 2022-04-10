@@ -2,11 +2,14 @@ package com.magazin.demo.service.impl;
 
 import com.magazin.demo.exception.NotFoundException;
 import com.magazin.demo.model.Product;
+import com.magazin.demo.model.User;
 import com.magazin.demo.model.Wishlist;
+import com.magazin.demo.repository.UserRepository;
 import com.magazin.demo.repository.WishlistRepository;
 import com.magazin.demo.service.WishlistService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -14,19 +17,22 @@ import java.util.Set;
 public class WishlistServiceImpl implements WishlistService {
 
     private final WishlistRepository wishlistRepository;
+    private final UserRepository userRepository;
 
-    public WishlistServiceImpl(WishlistRepository wishlistRepository) {
+    public WishlistServiceImpl(WishlistRepository wishlistRepository, UserRepository userRepository) {
         this.wishlistRepository = wishlistRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public Wishlist getWishlist(int userId) {
-        return wishlistRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException((String.format("wishlist with userId %s could not be found", userId))));
+    public Wishlist getWishlist(String username) {
+        User user = userRepository.findByUsername(username);
+        return wishlistRepository.getWishlistByUsername(user.getId()).orElseThrow(
+                () -> new NotFoundException((String.format("wishlist for user %s could not be found", username))));
     }
 
-    public Wishlist addProductByName(int usedId, Product product) {
-        Wishlist currentWishlist = getWishlist(usedId);
+    public Wishlist addProductByName(String username, Product product) {
+        Wishlist currentWishlist = getWishlist(username);
         Set<Product> products =  currentWishlist.getProducts();
         products.add(product);
         currentWishlist.setProducts(products);
@@ -34,8 +40,8 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-    public Wishlist deleteProductByName(int userId, Product product) {
-        Wishlist currentWishlist = getWishlist(userId);
+    public Wishlist deleteProductByName(String username, Product product) {
+        Wishlist currentWishlist = getWishlist(username);
         Set<Product> products =  currentWishlist.getProducts();
         products.remove(product);
         currentWishlist.setProducts(products);
@@ -43,8 +49,9 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-    public void updateWishlist(int user, Set<Product> products) {
-        wishlistRepository.updateWishlist(user,products);
+    public void updateWishlist(String username, Set<Product> products) {
+        User user = userRepository.findByUsername(username);
+        wishlistRepository.updateWishlist(user.getId(),products);
     }
 
     @Override
@@ -53,4 +60,8 @@ public class WishlistServiceImpl implements WishlistService {
         return wishlist;
     }
 
+    @Override
+    public List<Wishlist> findAll() {
+        return wishlistRepository.findAll();
+    }
 }
