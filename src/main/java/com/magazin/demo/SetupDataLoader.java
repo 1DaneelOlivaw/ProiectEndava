@@ -2,14 +2,20 @@ package com.magazin.demo;
 
 import com.magazin.demo.model.*;
 import com.magazin.demo.repository.*;
+import com.magazin.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 
 @Component
 public class SetupDataLoader implements
@@ -17,14 +23,6 @@ public class SetupDataLoader implements
 
     boolean alreadySetup = false;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserGroupRepository userGroupRepository;
-
-    @Autowired
-    private CustomerRepository customerRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -38,32 +36,14 @@ public class SetupDataLoader implements
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
+
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
-        if (alreadySetup)
+       if (alreadySetup)
             return;
-        UserGroup customerGroup = new UserGroup("customer","CUSTOMER");
-        userGroupRepository.save(customerGroup);
-        UserGroup adminGroup = new UserGroup("admin","ADMIN");
-        userGroupRepository.save(adminGroup);
-
-        User admin = new User();
-        admin.setUsername("myAdmin");
-        admin.setPhoneNumber("0707707070");
-        admin.setAddress("myAddress");
-        admin.setPassword(passwordEncoder.encode("myPassword"));
-        admin.setUserGroups(new HashSet<UserGroup>(List.of(adminGroup)));
-        userRepository.save(admin);
-
-        User admin1 = new User();
-        admin1.setUsername("myAdmin1");
-        admin1.setPhoneNumber("0707707071");
-        admin1.setAddress("myAddress");
-        admin1.setPassword(passwordEncoder.encode("myPassword1"));
-        admin1.setUserGroups(new HashSet<UserGroup>(List.of(adminGroup)));
-        userRepository.save(admin1);
 
         Product product = new Product("productA", 30f, true);
         productRepository.save(product);
@@ -74,44 +54,45 @@ public class SetupDataLoader implements
         Product product4 = new Product("productD", 10f, false);
         productRepository.save(product4);
 
-        Customer customer = new Customer();
-        customer.setUsername("willSlappin");
-        customer.setPhoneNumber("0740869966");
-        customer.setAddress("myAddress");
-        customer.setPassword(passwordEncoder.encode("Willy"));
-        customer.setFirstName("Will");
-        customer.setLastName("Smith");
-        customer.setUserGroups(new HashSet<UserGroup>(List.of(customerGroup)));
-        customerRepository.save(customer);
-        Wishlist wishlist = new Wishlist(customer);
-        wishlistRepository.save(wishlist);
-        Cart cart = new Cart(customer,0f,0);
-        cartRepository.save(cart);
-
-        Customer customer1 = new Customer();
-        customer1.setUsername("chrisCryin");
-        customer1.setPhoneNumber("0740587666");
-        customer1.setAddress("myAddress");
-        customer1.setPassword(passwordEncoder.encode("Chrissy"));
-        customer1.setFirstName("Chris");
-        customer1.setLastName("Rock");
-        customer1.setUserGroups(new HashSet<UserGroup>(List.of(customerGroup)));
-        customerRepository.save(customer1);
-        Wishlist wishlist1 = new Wishlist(customer1);
-        wishlistRepository.save(wishlist1);
-
-        Customer customer2 = new Customer();
-        customer2.setUsername("denzelWatchin");
-        customer2.setPhoneNumber("0740587634");
-        customer2.setAddress("myAddress");
-        customer2.setPassword(passwordEncoder.encode("Denzel"));
-        customer2.setFirstName("Denzel");
-        customer2.setLastName("Washington");
-        customer2.setUserGroups(new HashSet<UserGroup>(List.of(customerGroup)));
-        customerRepository.save(customer2);
-        Wishlist wishlist2 = new Wishlist(customer2);
-        wishlistRepository.save(wishlist2);
-
         alreadySetup = true;
     }
+
+    @Bean
+    CommandLineRunner run(UserService userService){
+        return args -> {
+            userService.saveRole(new Role(null, "ROLE_USER"));
+            userService.saveRole(new Role(null, "ROLE_ADMIN"));
+            userService.saveRole(new Role(null, "ROLE_VENDOR"));
+            userService.saveRole(new Role(null, "ROLE_CUSTOMER"));
+
+            User user1 = new User(null, "Jimothy" ,"Halpert", "jim", "1234", new ArrayList<>(), "Strada Melcilor");
+            userService.saveUser(user1);
+            userService.addRoleToUser("jim", "ROLE_CUSTOMER");
+            wishlistRepository.save(new Wishlist(user1));
+            cartRepository.save(new Cart(user1,0f,0));
+
+            User user2 = new User(null, "Dwight"," Schrute", "dwight", "1234", new ArrayList<>(), "Strada Haiducilor");
+            userService.saveUser(user2);
+            userService.addRoleToUser("dwight", "ROLE_VENDOR");
+            if (alreadySetup)
+                user2.setProducts(new HashSet<Product>(Arrays.asList(productRepository.getProductByName("productA").get(),productRepository.getProductByName("productB").get())));
+
+
+            userService.saveUser(new User(null, "Michael"," Scott", "dangerMike", "1234", new ArrayList<>(), "Strada Dumbravei"));
+            userService.saveUser(new User(null, "Creed ","Bratton", "creed", "1234", new ArrayList<>(), "Strada Chefului"));
+
+            //userService.addRoleToUser("john", "ROLE_USER");
+            userService.addRoleToUser("dangerMike", "ROLE_ADMIN");
+            userService.addRoleToUser("creed", "ROLE_CUSTOMER");
+            userService.addRoleToUser("creed", "ROLE_VENDOR");
+            userService.addRoleToUser("creed", "ROLE_ADMIN");
+
+        };
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 }

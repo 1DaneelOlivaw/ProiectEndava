@@ -1,15 +1,16 @@
 package com.magazin.demo.repository;
 
 import com.magazin.demo.model.User;
-import com.sun.xml.bind.v2.model.core.ID;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+@Repository
+@Transactional
+public interface UserRepository extends  JpaRepository<User, Long>  {
 
-public interface UserRepository extends JpaRepository<User, ID> {
+  User findByUsername(String username);
 
-  //  @Query("")
-    User findById(Integer id);
+  User getUserById(Long id);
 
-    Optional<User> findUserByUsername(String username);
 }

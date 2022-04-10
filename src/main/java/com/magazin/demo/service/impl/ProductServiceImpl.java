@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProductById (int productId){
+    public Product getProductById (Long productId){
         return productRepository.findById(productId).orElseThrow(
                 () -> new NotFoundException((String.format("error message: product with id %s could not be found", productId))));
     }
@@ -37,7 +37,6 @@ public class ProductServiceImpl implements ProductService {
         savedProduct.setName(Optional.ofNullable(product.getName()).orElse(savedProduct.getName()));
         savedProduct.setPrice(Optional.ofNullable(product.getPrice()).orElse(savedProduct.getPrice()));
         savedProduct.setStock(Optional.ofNullable(product.getStock()).orElse(savedProduct.getStock()));
-        //savedProduct.setPrice(Optional.ofNullable(product.getPrice()).orElse(savedProduct.getPrice()));
 
         return productRepository.save(savedProduct);
     }
@@ -50,9 +49,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(int productId) {
+    public void deleteProduct(Long productId) {
         productRepository.deleteProduct(productId);
     }
+
+    @Override
+    public void deleteProductByName(String productName) {
+        productRepository.deleteProductByName(productName);
+    }
+
 
     @Override
     public List<Product> findAll() {

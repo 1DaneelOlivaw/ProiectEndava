@@ -17,11 +17,11 @@ public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @JsonIgnore
     @OneToOne
-    private Customer customerId;
+    private User userId;
 
     @JsonIgnore
     @ManyToMany()
@@ -31,15 +31,15 @@ public class Cart {
 
     private Integer totalItems;
 
-    public Cart(Customer customerId, Set<Product> cartProducts, Float totalPrice, Integer totalItems) {
-        this.customerId = customerId;
+    public Cart(User userId, Set<Product> cartProducts, Float totalPrice, Integer totalItems) {
+        this.userId = userId;
         this.cartProducts = cartProducts;
         this.totalPrice = totalPrice;
         this.totalItems = totalItems;
     }
 
-    public Cart(Customer customerId, Float totalPrice, Integer totalItems) {
-        this.customerId = customerId;
+    public Cart(User userId, Float totalPrice, Integer totalItems) {
+        this.userId = userId;
         this.totalPrice = totalPrice;
         this.totalItems = totalItems;
     }

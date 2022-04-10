@@ -18,14 +18,14 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastModified;
 
     @JsonIgnore
     @OneToOne
-    private Customer customerId;
+    private User userId;
 
     @JsonIgnore
     @ManyToMany()
@@ -34,16 +34,16 @@ public class Order {
     private String status;
 
 
-    public Order(Date lastModified, Customer customerId, Set<Product> orderProducts, String status) {
+    public Order(Date lastModified, User userId, Set<Product> orderProducts, String status) {
         this.lastModified = lastModified;
-        this.customerId = customerId;
+        this.userId = userId;
         this.orderProducts = orderProducts;
         this.status = status;
     }
 
-    public Order(Date lastModified, Customer customerId, String status) {
+    public Order(Date lastModified, User userId, String status) {
         this.lastModified = lastModified;
-        this.customerId = customerId;
+        this.userId = userId;
         this.status = status;
     }
 }

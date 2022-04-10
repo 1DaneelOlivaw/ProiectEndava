@@ -16,11 +16,11 @@ import java.util.Set;
 public class Wishlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @JsonIgnore
     @OneToOne
-    private Customer customerId;
+    private User userId;
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST
@@ -28,12 +28,12 @@ public class Wishlist {
     @Column(name = "products")
     private Set<Product> products;
 
-    public Wishlist(Customer customer) {
-        this.customerId = customer;
+    public Wishlist(User user) {
+        this.userId = user;
     }
 
-    public Wishlist(Customer customerId, Set<Product> products) {
-        this.customerId = customerId;
+    public Wishlist(User userId, Set<Product> products) {
+        this.userId = userId;
         this.products = products;
     }
 }

@@ -9,15 +9,10 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface CartRepository  extends JpaRepository<Cart, Integer> {
-    //@Query("")
-    Optional<Cart> getCartById(Integer id);
+public interface CartRepository  extends JpaRepository<Cart, Long> {
 
-    //@Query(value = "select count(c)>0 from Cart c where c.customer_id_id=:customerId", nativeQuery = true)
-    //boolean existsByCustomerId(@Param("customerId") Integer userId);
+    Optional<Cart> getCartById(Long id);
 
-    //Boolean existsByCustomer(Integer userId);
-
-    @Query("Select c From Cart c where c.customerId.id=:customerId")
-    Optional<Cart> getCartByCustomerId(Integer customerId);
+    @Query("Select c From Cart c where c.userId.id=:userId")
+    Optional<Cart> getCartByCustomerId(Long userId);
 }

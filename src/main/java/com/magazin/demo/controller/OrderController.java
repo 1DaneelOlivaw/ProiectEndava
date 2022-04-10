@@ -2,10 +2,7 @@ package com.magazin.demo.controller;
 
 import com.magazin.demo.model.Order;
 import com.magazin.demo.service.OrderService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,7 +19,7 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @ApiOperation(value = "Find all orders")
+    @ApiOperation(value = "Find all orders", authorizations = { @Authorization(value="jwtToken") })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successful operation"),
             @ApiResponse(code = 401, message = "Login needed before performing this operation"),
@@ -33,24 +30,39 @@ public class OrderController {
         return orderService.findAll();
     }
 
-    @ApiOperation(value = "Find order by userId")
+    @ApiOperation(value = "Find order by userId", authorizations = { @Authorization(value="jwtToken") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful operation"),
+            @ApiResponse(code = 401, message = "Login needed before performing this operation"),
+            @ApiResponse(code = 403, message = "User does not have enough privileges"),
+            @ApiResponse(code = 404, message = "Something went wrong, order not found") })
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrder(@PathVariable int orderId){
+    public ResponseEntity<Order> getOrder(@PathVariable Long orderId){
         Order orderById = orderService.getOrderById(orderId);
         return new ResponseEntity<>(orderById, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Update an order")
+    @ApiOperation(value = "Update an order", authorizations = { @Authorization(value="jwtToken") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful operation"),
+            @ApiResponse(code = 401, message = "Login needed before performing this operation"),
+            @ApiResponse(code = 403, message = "User does not have enough privileges"),
+            @ApiResponse(code = 404, message = "Something went wrong, order could not be updated") })
     @PutMapping("/{orderId}")
-    public ResponseEntity<Order> updateOrder(@PathVariable int orderId, @RequestBody String newStatus) {
+    public ResponseEntity<Order> updateOrder(@PathVariable Long orderId, @RequestBody String newStatus) {
         Order order = orderService.getOrderById(orderId);
         Order updateOrder = orderService.updateOrderStatus(order,newStatus);
         return new ResponseEntity<>(updateOrder, HttpStatus.OK);
     }
 
-    @ApiOperation(value =  "Cancel order by ID")
+    @ApiOperation(value =  "Cancel order by ID", authorizations = { @Authorization(value="jwtToken") })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful operation"),
+            @ApiResponse(code = 401, message = "Login needed before performing this operation"),
+            @ApiResponse(code = 403, message = "User does not have enough privileges"),
+            @ApiResponse(code = 404, message = "Something went wrong, order could not be deleted") })
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<Order> deleteOrder(@PathVariable int orderId) {
+    public ResponseEntity<Order> deleteOrder(@PathVariable Long orderId) {
         orderService.deleteOrder(orderId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

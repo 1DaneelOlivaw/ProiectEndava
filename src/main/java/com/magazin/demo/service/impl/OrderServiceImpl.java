@@ -19,7 +19,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getOrderById(int orderId) {
+    public Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(
                 () -> new NotFoundException((String.format("the order with id %s could not be found", orderId))));
     }
@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteOrder(int orderId) {
+    public void deleteOrder(Long orderId) {
         Order searchedOrder = orderRepository.findById(orderId).orElseThrow(
                 () -> new NotFoundException((String.format("orders with id %s could not be found", orderId))));
         orderRepository.delete(searchedOrder);
